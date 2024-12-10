@@ -41,14 +41,9 @@ async function main() {
 	if (question) {
 		// if question is fetched, solve it
 		try {
-			// console.log({
-			// 	question,
-			// 	solutionsFileName,
-			// 	solutionsDir,
-			// });
-			// console.log('Attempting to solve question:', question, '\n');
+			console.log('Attempting to solve question:', question, '\n');
 			solution = await solveViaGPT(question);
-			// console.log('Solution:', solution);
+			console.log('Solution:', solution);
 		} catch (err) {
 			console.error('Error solving question:', err);
 		}
@@ -61,7 +56,7 @@ async function main() {
 				solutionsDir,
 				`${solution}\n\n/*\nquestion: ${question} */\n`
 			);
-			// await runCmd(`echo "${solution}" >> ${solutionsFileName}`);
+
 			console.log('Solution written to:', solutionsFileName);
 		} catch (err) {
 			console.error('Error writing solution to file:', err);
