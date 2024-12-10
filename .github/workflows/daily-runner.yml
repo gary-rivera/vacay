@@ -2,7 +2,7 @@ name: Random Daily Runs
 
 on:
   schedule:
-    - cron: '0 9 * * *' # Trigger the workflow daily at 9 AM UTC
+    - cron: '0 17 * * *' # Trigger the workflow daily at 9 AM PST
   workflow_dispatch:
 
 permissions:
