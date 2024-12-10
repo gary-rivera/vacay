@@ -30,7 +30,7 @@ jobs:
 
       - name: Run script the first time
         run: |
-          node /Users/gr/Documents/personal/code-projects/vacay/scripts/vacay.ts
+          node scripts/vacay.ts
 
       - name: Execute additional runs with unique sleep intervals
         run: |
@@ -40,7 +40,7 @@ jobs:
             DELAY=$(( (RANDOM % 61) + 30 )) # 61 is the range, 30 is the minimum
             echo "Sleeping for $DELAY minutes..."
             sleep $((DELAY * 60)) # Convert minutes to seconds
-            node /Users/gr/Documents/personal/code-projects/vacay/scripts/vacay.ts
+            node scripts/vacay.ts
           done
         env:
           COUNT: ${{ env.COUNT }}
