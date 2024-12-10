@@ -65,7 +65,7 @@ async function main() {
 
 	// Git operations
 	try {
-		await runCmd('git add ./solutions');
+		await runCmd('git add .');
 		await runCmd(`git commit -m "Add solution ${solutionsFileName}"`);
 		await runCmd('git push');
 		console.log('Committed and pushed successfully');
