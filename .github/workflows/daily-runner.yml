@@ -20,6 +20,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Configure Git
+        run: |
+          git config user.name "gary-rivera"
+          git config user.email "a.gary.rivera@gmail.com"
+
       - name: Generate random number of runs
         id: random
         run: |
