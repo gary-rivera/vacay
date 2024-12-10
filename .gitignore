@@ -20,3 +20,6 @@ dist/
 
 # Coverage reports
 coverage/
+
+# Editor directories
+./snippets/

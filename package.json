@@ -3,7 +3,9 @@
 	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
-		"commit": "ts-node scripts/vacay.ts",
+		"vacay": "ts-node scripts/vacay.ts",
+		"fetch-lc-q": "ts-node scripts/leetcode-fetcher.ts",
+		"solve-question": "ts-node scripts/gpt-question-solver.ts",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
@@ -14,5 +16,11 @@
 		"@types/node": "^22.10.1",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.7.2"
+	},
+	"dependencies": {
+		"@codingsnack/leetcode-api": "^0.0.5",
+		"cheerio": "^1.0.0",
+		"dotenv": "^16.4.7",
+		"node-fetch": "^3.3.2"
 	}
 }
