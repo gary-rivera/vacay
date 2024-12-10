@@ -31,7 +31,7 @@ jobs:
       - name: Run Vacay script
         run: npx ts-node scripts/vacay.ts
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
 
       - name: Execute additional runs with unique sleep intervals
         run: |
