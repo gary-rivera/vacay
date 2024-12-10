@@ -11,7 +11,7 @@ dotenv.config();
 // TODO: auto generate fallback solutions
 // const fallbacksDir = path.join(__dirname, '..', 'fallbacks');
 let solutionsDir = path.join(__dirname, '..', 'solutions');
-const githubToken = process.env.GITHUB_TOKEN;
+const GH_ACCESS_TOKEN = process.env.GH_ACCESS_TOKEN;
 
 function runCmd(cmd: string) {
 	return new Promise((resolve, reject) => {
@@ -69,7 +69,7 @@ async function main() {
 	// Git operations
 	try {
 		await runCmd(
-			`git remote set-url origin https://x-access-token:${githubToken}@github.com/gary-rivera/vacay.git`
+			`git remote set-url origin https://x-access-token:${GH_ACCESS_TOKEN}@github.com/gary-rivera/vacay.git`
 		);
 
 		await runCmd('git add .');
