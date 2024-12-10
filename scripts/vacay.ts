@@ -1,10 +1,13 @@
 import { exec } from 'child_process';
-import { readdirSync, copyFileSync } from 'fs';
+import { readdirSync, copyFileSync, writeFileSync } from 'fs';
 import path from 'path';
 import { LCQuestionFetcher } from './lc-question-fetcher';
 import { solveViaGPT } from './gpt-question-solver';
 
-const snippetsDir = path.join(__dirname, '..', 'snippets');
+// TODO: add fallbacks in case api reqeuest fails
+// TODO: auto generate fallback questions
+// TODO: auto generate fallback solutions
+// const fallbacksDir = path.join(__dirname, '..', 'fallbacks');
 const solutionsDir = path.join(__dirname, '..', 'solutions');
 
 function runCmd(cmd: string) {
@@ -19,7 +22,8 @@ function runCmd(cmd: string) {
 async function main() {
 	const timestamp = Date.now();
 	let question;
-	let destinationDir;
+	let solution;
+	let solutionsFileName = 'placeholder.ts';
 
 	// fetch random question from LeetCode
 	try {
@@ -27,45 +31,43 @@ async function main() {
 		question = resp?.readableContent;
 
 		if (resp?.titleSlug)
-			destinationDir = path.join(
-				snippetsDir,
-				`solution-${timestamp}-${resp?.titleSlug}`
+			solutionsFileName = path.join(
+				solutionsDir,
+				`${resp?.titleSlug}-${timestamp}.ts`
 			);
 	} catch (err) {
 		console.error('Error fetching question from API:', err);
 	}
 
-	// if failed, handle within local snippets
-	if (!question) {
-		const files = readdirSync(snippetsDir);
-		if (!files.length) {
-			console.log('No snippets found');
-			process.exit(0);
-		}
-		const randomFile = files[Math.floor(Math.random() * files.length)];
-		destinationDir = path.join(
-			solutionsDir,
-			`solution-${timestamp}-${randomFile}`
-		);
-		copyFileSync(path.join(snippetsDir, randomFile), destinationDir);
-
-		// TODO: handle deleting the snippet file once copied
-		// TODO: handle generating question from snippet content (a la getProblems(params))
-	} else {
-		// solve the fetched question
+	if (question) {
+		// if question is fetched, solve it
 		try {
 			console.log('Attempting to solve question:', question, '\n');
-			const solution = await solveViaGPT(question);
+			solution = await solveViaGPT(question);
 			console.log('Solution:', solution);
 		} catch (err) {
 			console.error('Error solving question:', err);
 		}
 	}
 
+	// write solution to file
+	if (solution) {
+		try {
+			writeFileSync(
+				solutionsFileName,
+				`${solution}\n\n/*\nquestion: ${question} */\n`
+			);
+			// await runCmd(`echo "${solution}" >> ${solutionsFileName}`);
+			console.log('Solution written to:', solutionsFileName);
+		} catch (err) {
+			console.error('Error writing solution to file:', err);
+		}
+	}
+
 	// Git operations
 	try {
-		await runCmd('git add .');
-		await runCmd(`git commit -m "Add solution ${destinationDir}"`);
+		await runCmd('git add ./solutions');
+		await runCmd(`git commit -m "Add solution ${solutionsFileName}"`);
 		await runCmd('git push');
 		console.log('Committed and pushed successfully');
 	} catch (err) {
