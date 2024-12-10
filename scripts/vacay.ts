@@ -8,7 +8,7 @@ import { solveViaGPT } from './gpt-question-solver';
 // TODO: auto generate fallback questions
 // TODO: auto generate fallback solutions
 // const fallbacksDir = path.join(__dirname, '..', 'fallbacks');
-const solutionsDir = path.join(__dirname, '..', 'solutions');
+let solutionsDir = path.join(__dirname, '..', 'solutions');
 
 function runCmd(cmd: string) {
 	return new Promise((resolve, reject) => {
@@ -31,10 +31,9 @@ async function main() {
 		question = resp?.readableContent;
 
 		if (resp?.titleSlug)
-			solutionsFileName = path.join(
-				solutionsDir,
-				`${resp?.titleSlug}-${timestamp}.ts`
-			);
+			solutionsFileName = `${resp?.titleSlug}-${timestamp}.ts`;
+
+		solutionsDir = path.join(solutionsDir, solutionsFileName);
 	} catch (err) {
 		console.error('Error fetching question from API:', err);
 	}
