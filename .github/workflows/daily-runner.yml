@@ -32,6 +32,8 @@ jobs:
         run: npx ts-node scripts/vacay.ts
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
+          LC_CSRF_TOKEN: ${{ secrets.LC_CSRF_TOKEN || '' }}
+          LC_SESSION: ${{ secrets.LC_SESSION || '' }}
 
       - name: Execute additional runs with unique sleep intervals
         run: |
@@ -45,7 +47,9 @@ jobs:
           done
         env:
           COUNT: ${{ env.COUNT }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
+          LC_CSRF_TOKEN: ${{ secrets.LC_CSRF_TOKEN || '' }}
+          LC_SESSION: ${{ secrets.LC_SESSION || '' }}
 
       - name: Commit and push solutions
         env:
