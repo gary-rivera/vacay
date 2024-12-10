@@ -43,7 +43,7 @@ jobs:
             DELAY=$(( (RANDOM % 61) + 30 )) # 61 is the range, 30 is the minimum
             echo "Sleeping for $DELAY minutes..."
             sleep $((DELAY * 60)) # Convert minutes to seconds
-            node scripts/vacay.ts
+            npx ts-node scripts/vacay.ts
           done
         env:
           COUNT: ${{ env.COUNT }}
