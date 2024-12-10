@@ -15,12 +15,12 @@ export const LCQuestionFetcher = async () => {
 
 	try {
 		const problem = await lc.getRandomQuestion();
-		console.log('problem', problem);
+		// console.log('problem', problem);
 		const { titleSlug, content } = problem;
 		const $ = cheerio.load(content);
 		const readableContent = $(content).text();
-		console.log('slug', titleSlug);
-		console.log('Problem:', readableContent);
+		// console.log('slug', titleSlug);
+		// console.log('Problem:', readableContent);
 		return { titleSlug, readableContent };
 	} catch (error) {
 		console.error('Error fetching problem:', error);

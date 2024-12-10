@@ -133,4 +133,4 @@ const test = {
 	`,
 };
 
-solveViaGPT(test.question);
+// solveViaGPT(test.question);
