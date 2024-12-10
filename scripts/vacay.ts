@@ -3,12 +3,15 @@ import { readdirSync, copyFileSync, writeFileSync } from 'fs';
 import path from 'path';
 import { LCQuestionFetcher } from './lc-question-fetcher';
 import { solveViaGPT } from './gpt-question-solver';
+import dotenv from 'dotenv';
 
+dotenv.config();
 // TODO: add fallbacks in case api reqeuest fails
 // TODO: auto generate fallback questions
 // TODO: auto generate fallback solutions
 // const fallbacksDir = path.join(__dirname, '..', 'fallbacks');
 let solutionsDir = path.join(__dirname, '..', 'solutions');
+const githubToken = process.env.GITHUB_TOKEN;
 
 function runCmd(cmd: string) {
 	return new Promise((resolve, reject) => {
@@ -65,6 +68,10 @@ async function main() {
 
 	// Git operations
 	try {
+		await runCmd(
+			`git remote set-url origin https://x-access-token:${githubToken}@github.com/gary-rivera/vacay.git`
+		);
+
 		await runCmd('git add .');
 		await runCmd(`git commit -m "Add solution ${solutionsFileName}"`);
 		await runCmd('git push');

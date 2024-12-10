@@ -1,6 +1,6 @@
 import { Leetcode } from '@codingsnack/leetcode-api';
-import dotenv from 'dotenv';
 import * as cheerio from 'cheerio';
+import dotenv from 'dotenv';
 
 dotenv.config();
 const csrfToken = process.env.LC_CSRF_TOKEN;
