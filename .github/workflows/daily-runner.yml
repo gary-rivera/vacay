@@ -4,6 +4,10 @@ on:
   schedule:
     - cron: '0 9 * * *' # Trigger the workflow daily at 9 AM UTC
   workflow_dispatch:
+
+permissions:
+  contents: write
+
 jobs:
   random-runs:
     runs-on: ubuntu-latest
@@ -11,6 +15,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
+        with:
+          persist-credentials: true
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -28,39 +34,35 @@ jobs:
       - name: Generate random number of runs
         id: random
         run: |
-          # Generate a random number between 2 and 8 for the number of runs
-          COUNT=$(( (RANDOM % 7) + 2 )) # 7 is the range, 2 is the minimum
+          # Generate a random number between 2 and 8
+          COUNT=$(( (RANDOM % 7) + 2 ))
           echo "COUNT=$COUNT" >> $GITHUB_ENV
           echo "Randomly selected $COUNT runs for today."
 
       - name: Run Vacay script
         run: npx ts-node scripts/vacay.ts
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
-          LC_CSRF_TOKEN: ${{ secrets.LC_CSRF_TOKEN || '' }}
-          LC_SESSION: ${{ secrets.LC_SESSION || '' }}
-          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN || '' }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          LC_CSRF_TOKEN: ${{ secrets.LC_CSRF_TOKEN }}
+          LC_SESSION: ${{ secrets.LC_SESSION }}
 
       - name: Execute additional runs with unique sleep intervals
         run: |
           for i in $(seq 2 $COUNT); do
             echo "Run #$i of $COUNT"
-            # Generate a random sleep interval between 30 minutes and 90 minutes
-            DELAY=$(( (RANDOM % 61) + 30 )) # 61 is the range, 30 is the minimum
+            # Generate a random sleep interval between 30 and 90 minutes
+            DELAY=$(( (RANDOM % 61) + 30 ))
             echo "Sleeping for $DELAY minutes..."
             sleep $((DELAY * 60)) # Convert minutes to seconds
             npx ts-node scripts/vacay.ts
           done
         env:
           COUNT: ${{ env.COUNT }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
-          LC_CSRF_TOKEN: ${{ secrets.LC_CSRF_TOKEN || '' }}
-          LC_SESSION: ${{ secrets.LC_SESSION || '' }}
-          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN || '' }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          LC_CSRF_TOKEN: ${{ secrets.LC_CSRF_TOKEN }}
+          LC_SESSION: ${{ secrets.LC_SESSION }}
 
       - name: Commit and push solutions
-        env:
-          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
