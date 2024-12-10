@@ -35,7 +35,7 @@ async function main() {
 		console.error('Error fetching question from API:', err);
 	}
 
-	// if failed, pull from local snippets
+	// if failed, handle within local snippets
 	if (!question) {
 		const files = readdirSync(snippetsDir);
 		if (!files.length) {
@@ -48,9 +48,13 @@ async function main() {
 			`solution-${timestamp}-${randomFile}`
 		);
 		copyFileSync(path.join(snippetsDir, randomFile), destinationDir);
+
+		// TODO: handle deleting the snippet file once copied
+		// TODO: handle generating question from snippet content (a la getProblems(params))
 	} else {
 		// solve the fetched question
 		try {
+			console.log('Attempting to solve question:', question, '\n');
 			const solution = await solveViaGPT(question);
 			console.log('Solution:', solution);
 		} catch (err) {
