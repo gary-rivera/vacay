@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import * as cheerio from 'cheerio';
 
 dotenv.config();
-const csrfToken = `${process.env.LC_CSRF_TOKEN}`;
+const csrfToken = process.env.LC_CSRF_TOKEN;
 const session = process.env.LC_SESSION;
 
 export const LCQuestionFetcher = async () => {
