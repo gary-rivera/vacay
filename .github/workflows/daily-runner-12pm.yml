@@ -1,15 +1,15 @@
-name: Random Daily Runs
+name: Daily Run @ 20 UTC
 
 on:
   schedule:
-    - cron: '0 17 * * *' # Trigger the workflow daily at 9 AM PST
+    - cron: '11 20 * * *' #Daily at 12:11PM PST
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  random-runs:
+  script-runner:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,6 +17,16 @@ jobs:
         uses: actions/checkout@v3
         with:
           persist-credentials: true
+
+      - name: 50% Chance of Execution
+        run: |
+          # Generate a random number between 0 and 1
+          RANDOM_NUMBER=$(( RANDOM % 2 ))
+          if [ $RANDOM_NUMBER -ne 0 ]; then
+            echo "Skipping execution due to 50% chance condition."
+            exit 0
+          fi
+          echo "Proceeding with execution."
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -31,33 +41,16 @@ jobs:
           git config user.name "gary-rivera"
           git config user.email "a.gary.rivera@gmail.com"
 
-      - name: Generate random number of runs
-        id: random
+      - name: Random delay before execution
         run: |
-          # Generate a random number between 2 and 8
-          COUNT=$(( (RANDOM % 7) + 2 ))
-          echo "COUNT=$COUNT" >> $GITHUB_ENV
-          echo "Randomly selected $COUNT runs for today."
+          # Generate a random delay between 0 and 600 seconds (10 minutes)
+          DELAY=$(( RANDOM % 601 ))
+          echo "Sleeping for $DELAY seconds..."
+          sleep $DELAY
 
-      - name: Run Vacay script
+      - name: Run Vacay script (Single Execution)
         run: npx ts-node scripts/vacay.ts
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          LC_CSRF_TOKEN: ${{ secrets.LC_CSRF_TOKEN }}
-          LC_SESSION: ${{ secrets.LC_SESSION }}
-
-      - name: Execute additional runs with unique sleep intervals
-        run: |
-          for i in $(seq 2 $COUNT); do
-            echo "Run #$i of $COUNT"
-            # Generate a random sleep interval between 30 and 90 minutes
-            DELAY=$(( (RANDOM % 61) + 30 ))
-            echo "Sleeping for $DELAY minutes..."
-            sleep $((DELAY * 60)) # Convert minutes to seconds
-            npx ts-node scripts/vacay.ts
-          done
-        env:
-          COUNT: ${{ env.COUNT }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           LC_CSRF_TOKEN: ${{ secrets.LC_CSRF_TOKEN }}
           LC_SESSION: ${{ secrets.LC_SESSION }}
@@ -66,6 +59,7 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
+          git pull
           git add solutions
           if git diff --cached --quiet; then
             echo "No changes to commit."

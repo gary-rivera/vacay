@@ -18,7 +18,7 @@ export const solveViaGPT = async (question: string) => {
 			{
 				role: 'system',
 				content:
-					'You are a programming assistant. Generate ONLY TypeScript code, nothing else, for a given problem. Do not include any markdown or text fluff.',
+					'You are a programming assistant. Generate ONLY TypeScript code, nothing else, for a given problem. Do not include any markdown, and just output the code with no extra text or markdown prefixes. Formatting should be able to be directly copied into a TypeScript file and be run.',
 			},
 			{
 				role: 'user',
@@ -41,7 +41,7 @@ export const solveViaGPT = async (question: string) => {
 			body: JSON.stringify({
 				model: 'gpt-4',
 				messages,
-				max_tokens: 1500,
+				max_tokens: 2000,
 				temperature: 0.2,
 			}),
 		});
@@ -59,7 +59,9 @@ export const solveViaGPT = async (question: string) => {
 		if (!solution) {
 			throw new Error('Failed to generate solution from OpenAI.');
 		}
-
+		if (solution.startsWith('```typescript')) {
+			throw new Error('Solution from OpenAI was formatted incorrectly.');
+		}
 		return solution;
 	} catch (error) {
 		console.error('Error:', error);
