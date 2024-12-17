@@ -60,7 +60,7 @@ export const solveViaGPT = async (question: string) => {
 			throw new Error('Failed to generate solution from OpenAI.');
 		}
 		if (solution.startsWith('```typescript')) {
-			throw new Error('Solution from OpenAI was formatted incorrectly');
+			throw new Error('Solution from OpenAI was formatted incorrectly.');
 		}
 		return solution;
 	} catch (error) {
