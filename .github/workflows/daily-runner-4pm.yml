@@ -1,4 +1,4 @@
-name: Daily Run @ 20 UTC
+name: Daily Run @ 24 UTC
 
 on:
   schedule:
