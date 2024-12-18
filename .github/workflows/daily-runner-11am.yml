@@ -19,29 +19,35 @@ jobs:
           persist-credentials: true
 
       - name: 50% Chance of Execution
+        id: chance
         run: |
           # Generate a random number between 0 and 1
           RANDOM_NUMBER=$(( RANDOM % 2 ))
           if [ $RANDOM_NUMBER -ne 0 ]; then
+            echo "skip=true" >> $GITHUB_ENV
             echo "Skipping execution due to 50% chance condition."
-            exit 0
-          fi
-          echo "Proceeding with execution."
+          else
+            echo "skip=false" >> $GITHUB_ENV
+            echo "Proceeding with execution."
 
       - name: Set up Node.js
+        if: env.skip == 'false'
         uses: actions/setup-node@v3
         with:
           node-version: '21'
 
       - name: Install dependencies
+        if: env.skip == 'false'
         run: npm install
 
       - name: Configure Git
+        if: env.skip == 'false'
         run: |
           git config user.name "gary-rivera"
           git config user.email "a.gary.rivera@gmail.com"
 
       - name: Random delay before execution
+        if: env.skip == 'false'
         run: |
           # Generate a random delay between 0 and 600 seconds (10 minutes)
           DELAY=$(( RANDOM % 601 ))
@@ -49,6 +55,7 @@ jobs:
           sleep $DELAY
 
       - name: Run Vacay script (Single Execution)
+        if: env.skip == 'false'
         run: npx ts-node scripts/vacay.ts
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -56,6 +63,7 @@ jobs:
           LC_SESSION: ${{ secrets.LC_SESSION }}
 
       - name: Commit and push solutions
+        if: env.skip == 'false'
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
