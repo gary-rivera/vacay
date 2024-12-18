@@ -1,8 +1,8 @@
-name: Daily Run @ 19 UTC
+name: Daily Run @ 23 UTC
 
 on:
   schedule:
-    - cron: '0 19 * * *' #Daily at 11 AM PST
+    - cron: '5 23 * * *' #Daily at 3:05PM PST
   workflow_dispatch:
 
 permissions:
