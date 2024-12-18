@@ -1,4 +1,4 @@
-name: Daily Run @ 20 UTC
+name: Daily Run @ 24 UTC
 
 on:
   schedule:
@@ -21,6 +21,7 @@ jobs:
       - name: 50% Chance of Execution
         id: chance
         run: |
+          #!/bin/bash
           # Generate a random number between 0 and 1
           RANDOM_NUMBER=$(( RANDOM % 2 ))
           if [ $RANDOM_NUMBER -ne 0 ]; then
@@ -29,6 +30,7 @@ jobs:
           else
             echo "skip=false" >> $GITHUB_ENV
             echo "Proceeding with execution."
+          fi
 
       - name: Set up Node.js
         if: env.skip == 'false'
@@ -67,7 +69,7 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          git pull
+          git pull --rebase
           git add solutions
           if git diff --cached --quiet; then
             echo "No changes to commit."
