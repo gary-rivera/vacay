@@ -1,0 +1,54 @@
+function findNumberOfLIS(nums: number[]): number {
+    let n = nums.length, res = 0, max_len = 0;
+    let len = new Array(n).fill(0);
+    let cnt = new Array(n).fill(0);
+
+    for(let i = 0; i < n; i++){
+        len[i] = cnt[i] = 1;
+        for(let j = 0; j < i ; j++){
+            if(nums[i] > nums[j]){
+                if(len[i] == len[j] + 1)cnt[i] += cnt[j];
+                if(len[i] < len[j] + 1){
+                    len[i] = len[j] + 1;
+                    cnt[i] = cnt[j];
+                }
+            }
+        }
+        if(max_len == len[i])res += cnt[i];
+        if(max_len < len[i]){
+            max_len = len[i];
+            res = cnt[i];
+        }
+    }
+    return res;
+}
+
+/*
+question: Given an integer array nums, return the number of longest increasing subsequences.
+
+Notice that the sequence has to be strictly increasing.
+
+ 
+Example 1:
+
+Input: nums = [1,3,5,4,7]
+Output: 2
+Explanation: The two longest increasing subsequences are [1, 3, 4, 7] and [1, 3, 5, 7].
+
+
+Example 2:
+
+Input: nums = [2,2,2,2,2]
+Output: 5
+Explanation: The length of the longest increasing subsequence is 1, and there are 5 increasing subsequences of length 1, so output 5.
+
+
+ 
+Constraints:
+
+
+	1 <= nums.length <= 2000
+	-106 <= nums[i] <= 106
+	The answer is guaranteed to fit inside a 32-bit integer.
+
+ */
