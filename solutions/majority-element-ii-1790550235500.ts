@@ -1,0 +1,55 @@
+function findElements(nums: number[]): number[] {
+    let n = nums.length;
+    let countMap = new Map<number, number>();
+    let result: number[] = [];
+
+    for (let i = 0; i < n; i++) {
+        if (countMap.has(nums[i])) {
+            countMap.set(nums[i], countMap.get(nums[i])! + 1);
+        } else {
+            countMap.set(nums[i], 1);
+        }
+    }
+
+    countMap.forEach((value, key) => {
+        if (value > Math.floor(n / 3)) {
+            result.push(key);
+        }
+    });
+
+    return result;
+}
+
+/*
+question: Given an integer array of size n, find all elements that appear more than ⌊n / 3⌋ times.
+
+ 
+Example 1:
+
+Input: nums = [3,2,3]
+Output: [3]
+
+
+Example 2:
+
+Input: nums = [1]
+Output: [1]
+
+
+Example 3:
+
+Input: nums = [1,2]
+Output: [1,2]
+
+
+ 
+Constraints:
+
+
+	1 <= nums.length <= 5 * 104
+	-109 <= nums[i] <= 109
+
+
+ 
+Follow up: Could you solve the problem in linear time and in O(1) space?
+ */
